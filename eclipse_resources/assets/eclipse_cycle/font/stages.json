@@ -1,0 +1,67 @@
+{
+  "providers": [
+    {
+      "type": "bitmap",
+      "file": "eclipse_cycle:font/total_solar.png",
+      "ascent": 14,
+      "height": 16,
+      "chars": [
+        ""
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "eclipse_cycle:font/annular_solar.png",
+      "ascent": 14,
+      "height": 16,
+      "chars": [
+        ""
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "eclipse_cycle:font/partial_solar.png",
+      "ascent": 14,
+      "height": 16,
+      "chars": [
+        ""
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "eclipse_cycle:font/hybrid_solar.png",
+      "ascent": 14,
+      "height": 16,
+      "chars": [
+        ""
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "eclipse_cycle:font/total_lunar.png",
+      "ascent": 14,
+      "height": 16,
+      "chars": [
+        ""
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "eclipse_cycle:font/partial_lunar.png",
+      "ascent": 14,
+      "height": 16,
+      "chars": [
+        ""
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "eclipse_cycle:font/penumbral_lunar.png",
+      "ascent": 14,
+      "height": 16,
+      "chars": [
+        ""
+      ]
+    }
+  ]
+}

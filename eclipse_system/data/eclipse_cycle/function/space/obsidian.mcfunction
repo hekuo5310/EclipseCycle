@@ -1,0 +1,24 @@
+scoreboard players set @s ec.portal 0
+execute if block ~ ~-1 ~ minecraft:obsidian run return run scoreboard players set @s ec.portal 1
+execute if block ~ ~ ~ minecraft:obsidian run return run scoreboard players set @s ec.portal 1
+execute if block ~ ~1 ~ minecraft:obsidian run return run scoreboard players set @s ec.portal 1
+execute if block ~1 ~ ~ minecraft:obsidian run return run scoreboard players set @s ec.portal 1
+execute if block ~-1 ~ ~ minecraft:obsidian run return run scoreboard players set @s ec.portal 1
+execute if block ~ ~ ~1 minecraft:obsidian run return run scoreboard players set @s ec.portal 1
+execute if block ~ ~ ~-1 minecraft:obsidian run return run scoreboard players set @s ec.portal 1
+execute if block ~2 ~ ~ minecraft:obsidian run return run scoreboard players set @s ec.portal 1
+execute if block ~-2 ~ ~ minecraft:obsidian run return run scoreboard players set @s ec.portal 1
+execute if block ~ ~ ~2 minecraft:obsidian run return run scoreboard players set @s ec.portal 1
+execute if block ~ ~ ~-2 minecraft:obsidian run return run scoreboard players set @s ec.portal 1
+execute if block ~3 ~ ~ minecraft:obsidian run return run scoreboard players set @s ec.portal 1
+execute if block ~-3 ~ ~ minecraft:obsidian run return run scoreboard players set @s ec.portal 1
+execute if block ~ ~ ~3 minecraft:obsidian run return run scoreboard players set @s ec.portal 1
+execute if block ~ ~ ~-3 minecraft:obsidian run return run scoreboard players set @s ec.portal 1
+execute if block ~4 ~ ~ minecraft:obsidian run return run scoreboard players set @s ec.portal 1
+execute if block ~-4 ~ ~ minecraft:obsidian run return run scoreboard players set @s ec.portal 1
+execute if block ~ ~ ~4 minecraft:obsidian run return run scoreboard players set @s ec.portal 1
+execute if block ~ ~ ~-4 minecraft:obsidian run return run scoreboard players set @s ec.portal 1
+execute if block ~5 ~ ~ minecraft:obsidian run return run scoreboard players set @s ec.portal 1
+execute if block ~-5 ~ ~ minecraft:obsidian run return run scoreboard players set @s ec.portal 1
+execute if block ~ ~ ~5 minecraft:obsidian run return run scoreboard players set @s ec.portal 1
+execute if block ~ ~ ~-5 minecraft:obsidian run return run scoreboard players set @s ec.portal 1

@@ -1,0 +1,11 @@
+{
+  "eclipse_cycle.spawn_result": "出生点范围与日食带重叠（1 = 是）：",
+  "eclipse_cycle.target_result": "传送前缓存的日食带重叠结果（1 = 是）：",
+  "eclipse_cycle.total_solar": "日全食",
+  "eclipse_cycle.annular_solar": "日环食",
+  "eclipse_cycle.partial_solar": "日偏食",
+  "eclipse_cycle.hybrid_solar": "全环食",
+  "eclipse_cycle.total_lunar": "月全食",
+  "eclipse_cycle.partial_lunar": "月偏食",
+  "eclipse_cycle.penumbral_lunar": "半影月食"
+}

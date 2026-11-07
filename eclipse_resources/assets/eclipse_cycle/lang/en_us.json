@@ -1,0 +1,11 @@
+{
+  "eclipse_cycle.spawn_result": "Spawn area intersects the solar belt (1 = yes): ",
+  "eclipse_cycle.target_result": "Prepared target overlap (1 = yes): ",
+  "eclipse_cycle.total_solar": "Total solar eclipse",
+  "eclipse_cycle.annular_solar": "Annular solar eclipse",
+  "eclipse_cycle.partial_solar": "Partial solar eclipse",
+  "eclipse_cycle.hybrid_solar": "Hybrid solar eclipse",
+  "eclipse_cycle.total_lunar": "Total lunar eclipse",
+  "eclipse_cycle.partial_lunar": "Partial lunar eclipse",
+  "eclipse_cycle.penumbral_lunar": "Penumbral lunar eclipse"
+}
