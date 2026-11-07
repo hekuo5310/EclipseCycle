@@ -2,14 +2,14 @@
   "pack": {
     "pack_format": 34,
     "supported_formats": [
-      34,
+      18,
       75
     ],
-    "min_format": 34,
+    "min_format": 18,
     "max_format": [
       75,
       0
     ],
-    "description": "日月蚀轮 / Eclipse Cycle · Java 1.21.x"
+    "description": "日月蚀轮 / Eclipse Cycle"
   }
 }

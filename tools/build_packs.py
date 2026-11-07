@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Generate the Java 1.21.x packs. No ephemerides are generated."""
+"""Generate the Java Edition packs. No ephemerides are generated."""
 import json
 from pathlib import Path
+import shutil
 import struct
 import zlib
 
@@ -73,14 +74,23 @@ OBJECTIVES = {name: "dummy" for name in
               "sys view cx cz day inside zone tx ty tz px py pz pday ready portal target".split()}
 OBJECTIVES.update(opt="trigger", spawn="trigger")
 
-for base, first, last in [(DATA, 48, [94, 1]), (RES, 34, [75, 0])]:
-    obj(base / "pack.mcmeta", {"pack": {
-        "pack_format": first,
-        "supported_formats": [first, last[0]],
-        "min_format": first,
+LEGACY_OVERLAY = "legacy_1_20"
+for base, preferred, last in [(DATA, 48, [94, 1]), (RES, 34, [75, 0])]:
+    metadata = {"pack": {
+        "pack_format": preferred,
+        "supported_formats": [18, last[0]],
+        "min_format": 18,
         "max_format": last,
-        "description": "日月蚀轮 / Eclipse Cycle · Java 1.21.x",
-    }})
+        "description": "日月蚀轮 / Eclipse Cycle",
+    }}
+    if base == DATA:
+        metadata["overlays"] = {"entries": [{
+            "directory": LEGACY_OVERLAY,
+            "formats": [18, 41],
+            "min_format": 18,
+            "max_format": 41,
+        }]}
+    obj(base / "pack.mcmeta", metadata)
 for tag in ("load", "tick"):
     obj(DATA / "data/minecraft/tags/function" / (tag + ".json"), {"values": [NS + ":" + tag]})
 
@@ -298,8 +308,9 @@ fn("space/spawn",
    'tellraw @s [{"translate":"eclipse_cycle.spawn_result","fallback":"Spawn overlap (1 = yes): "},{"score":{"name":"@s","objective":"ec.zone"}}]')
 fn("space/respawn",
    "# The Overworld dimension may be omitted by the 1.21.5–1.21.8 serializer.",
-   when('if data entity @s respawn{dimension:"minecraft:overworld"}', "return run " + call("space/respawn_modern")),
-   when("if data entity @s respawn.pos[0] unless data entity @s respawn.dimension", "return run " + call("space/respawn_modern")),
+   when('if data entity @s respawn{dimension:"minecraft:overworld"}', call("space/respawn_modern")),
+   when("if data entity @s respawn.pos[0] unless data entity @s respawn.dimension", call("space/respawn_modern")),
+   stop("if data entity @s respawn"),
    stop("unless data entity @s SpawnX"), stop("unless data entity @s SpawnZ"),
    when('if data entity @s SpawnDimension unless data entity @s {SpawnDimension:"minecraft:overworld"}', "return 0"),
    f"execute store result score #sample_x {SYS} run data get entity @s SpawnX",
@@ -317,7 +328,7 @@ def relative(offset):
 
 fn("space/obsidian",
    "scoreboard players set @s ec.portal 0",
-   *(f"execute if block {' '.join(map(relative, pos))} minecraft:obsidian run return run scoreboard players set @s ec.portal 1"
+   *(f"execute if score @s ec.portal matches 0 if block {' '.join(map(relative, pos))} minecraft:obsidian run scoreboard players set @s ec.portal 1"
      for pos in offsets))
 
 fn("teleport/prepare",
@@ -344,17 +355,21 @@ fn("teleport/consume",
    f"execute in minecraft:overworld store result score #commit_day {SYS} run time query day",
    stop(f"unless score @s ec.pday = #commit_day {SYS}"),
    *(f"execute store result storage {ARG} {axis} int 1 run scoreboard players get @s ec.p{axis}" for axis in "xyz"),
-   f"execute store success score #moved {SYS} run function {NS}:teleport/move with storage {ARG}",
+   set_("moved", 0),
+   f"function {NS}:teleport/move with storage {ARG}",
    stop(match("moved", "0")),
    'title @s actionbar [{"translate":"eclipse_cycle.target_result","fallback":"Prepared target overlap (1 = yes): "},{"score":{"name":"@s","objective":"ec.target"}}]')
 fn("teleport/move",
-   "$return run execute in minecraft:overworld positioned $(x) $(y) $(z) run tp @s ~0.5 ~ ~0.5")
+   f"$execute in minecraft:overworld positioned $(x) $(y) $(z) store success score #moved {SYS} run tp @s ~0.5 ~ ~0.5")
 
 fn("visual/hide", *(f"bossbar set {NS}:{row[0]} players" for row in TYPES))
+INACTIVE = f"unless predicate {NS}:active_window"
+OUTSIDE_BELT = match("kind", "1..4") + " unless score @s ec.inside matches 1"
+HIDE_VIEW = "scoreboard players set @s ec.view 0"
 fn("visual/player",
-   when("unless predicate " + NS + ":active_window", "return run scoreboard players set @s ec.view 0"),
+   when(INACTIVE, HIDE_VIEW), stop(INACTIVE),
    when(match("kind", "1..4"), call("space/player_chunk")),
-   when(match("kind", "1..4") + " unless score @s ec.inside matches 1", "return run scoreboard players set @s ec.view 0"),
+   when(OUTSIDE_BELT, HIDE_VIEW), stop(OUTSIDE_BELT),
    *(when(match("kind", code) + f" unless score @s ec.view matches {code}", call("visual/" + row[0]))
      for code, row in enumerate(TYPES, 1)),
    put_player("kind", "view"),
@@ -431,3 +446,10 @@ for code, (key, zh, en, color, particle, sound, a, b, level) in enumerate(TYPES,
 obj(RES / f"assets/{NS}/font/stages.json", {"providers": providers})
 obj(RES / f"assets/{NS}/lang/en_us.json", en_lang)
 obj(RES / f"assets/{NS}/lang/zh_cn.json", zh_lang)
+
+
+# Java 1.20.x discovers these registries under plural directory names.
+# The loader selects this overlay by pack format; both layouts share one source.
+for path in (Path(f"{NS}/function"), Path(f"{NS}/predicate"), Path("minecraft/tags/function")):
+    legacy = path.with_name(path.name + "s")
+    shutil.copytree(DATA / "data" / path, DATA / LEGACY_OVERLAY / "data" / legacy, dirs_exist_ok=True)

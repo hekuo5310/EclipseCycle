@@ -1,6 +1,8 @@
-execute unless predicate eclipse_cycle:active_window run return run scoreboard players set @s ec.view 0
+execute unless predicate eclipse_cycle:active_window run scoreboard players set @s ec.view 0
+execute unless predicate eclipse_cycle:active_window run return 0
 execute if score #kind ec.sys matches 1..4 run function eclipse_cycle:space/player_chunk
-execute if score #kind ec.sys matches 1..4 unless score @s ec.inside matches 1 run return run scoreboard players set @s ec.view 0
+execute if score #kind ec.sys matches 1..4 unless score @s ec.inside matches 1 run scoreboard players set @s ec.view 0
+execute if score #kind ec.sys matches 1..4 unless score @s ec.inside matches 1 run return 0
 execute if score #kind ec.sys matches 1 unless score @s ec.view matches 1 run function eclipse_cycle:visual/total_solar
 execute if score #kind ec.sys matches 2 unless score @s ec.view matches 2 run function eclipse_cycle:visual/annular_solar
 execute if score #kind ec.sys matches 3 unless score @s ec.view matches 3 run function eclipse_cycle:visual/partial_solar

@@ -1,9 +1,12 @@
 # 日月蚀轮 / Eclipse Cycle
 
-一个以 Minecraft 世界日为时钟的日月食模拟。首选版本为 **Java 1.21.1**，命名空间为 `eclipse_cycle`。同一套数据包和资源包覆盖正式版 **1.21–1.21.11**。
+一个以 Minecraft 世界日为时钟的日月食模拟。首选版本为 **Java 1.21.1**，命名空间为 `eclipse_cycle`。同一套数据包和资源包覆盖正式版 **1.20.2–1.21.11**。
 
 | Java 版 | 数据包格式 | 资源包格式 |
 | --- | ---: | ---: |
+| 1.20.2 | 18 | 18 |
+| 1.20.3–1.20.4 | 26 | 22 |
+| 1.20.5–1.20.6 | 41 | 32 |
 | **1.21–1.21.1** | **48** | **34** |
 | 1.21.2–1.21.3 | 57 | 42 |
 | 1.21.4 | 61 | 46 |
@@ -13,7 +16,7 @@
 | 1.21.9–1.21.10 | 88.0 | 69.0 |
 | 1.21.11 | 94.1 | 75.0 |
 
-两个包都用 1.21.1 的 `pack_format`，同时声明旧式 `supported_formats` 和新式 `min_format/max_format`。文本命令使用两个解析器都接受的带引号 JSON 写法。复活点读取兼容 1.21.1 的 `SpawnX/SpawnZ` 与 1.21.5 起的 `respawn.pos`，并区分下界重生锚。
+两个包都用 1.21.1 的 `pack_format`，同时声明旧式 `supported_formats` 和新式 `min_format/max_format`。1.20.2–1.20.6 自动加载 `legacy_1_20/` 中的复数目录结构，1.21.x 直接读取基础包。两套目录由同一生成器维护。文本命令使用两个解析器都接受的带引号 JSON 写法。复活点读取兼容 1.20.x–1.21.4 的 `SpawnX/SpawnZ` 与 1.21.5 起的 `respawn.pos`，并区分下界重生锚。
 
 ## 安装
 
@@ -48,6 +51,7 @@ resource-pack-prompt={"text":"日月蚀轮 / Eclipse Cycle"}
 ```text
 eclipse_system/
   pack.mcmeta
+  legacy_1_20/data/（自动生成的 functions、predicates 和 tags/functions）
   data/
     minecraft/tags/function/{load,tick}.json
     eclipse_cycle/
@@ -199,4 +203,4 @@ execute as <玩家> run function eclipse_cycle:teleport/consume
 | Celestial Order Fix | 作者标记 CC0-1.0 | 仅列为独立可选项，无捆绑、调用或修改 |
 | gm、N_lib、nn_math | 未引入，无需依赖其许可 | 原创 `eclipse_cycle:math/sin` 和 `math/sqrt` 作为替代 |
 
-格式与复活点变更见 [Mojang Java 1.21](https://feedback.minecraft.net/hc/en-us/articles/27547857163917-Minecraft-Java-Edition-1-21-Tricky-Trials)、[1.21.5](https://feedback.minecraft.net/hc/en-us/articles/35298208390797-Minecraft-Java-Edition-1-21-5-Spring-to-Life)、[1.21.9](https://www.minecraft.net/en-us/article/minecraft-java-edition-1-21-9) 和 [1.21.11](https://www.minecraft.net/en-us/article/minecraft-java-edition-1-21-11) 的说明。低精度黄纬项可对照 [Position of the Moon](https://www.braeunig.us/space/plntpos.htm)。仓库中没有 NASA 事件表、Besselian 元素、路径数据或预计算日期与位置，也没有第三方数学库。
+格式与复活点变更见 [Mojang Java 1.20.2](https://feedback.minecraft.net/hc/en-us/articles/19703470383757-Minecraft-Java-Edition-1-20-2)、[1.21](https://feedback.minecraft.net/hc/en-us/articles/27547857163917-Minecraft-Java-Edition-1-21-Tricky-Trials)、[1.21.5](https://feedback.minecraft.net/hc/en-us/articles/35298208390797-Minecraft-Java-Edition-1-21-5-Spring-to-Life)、[1.21.9](https://www.minecraft.net/en-us/article/minecraft-java-edition-1-21-9) 和 [1.21.11](https://www.minecraft.net/en-us/article/minecraft-java-edition-1-21-11) 的说明。低精度黄纬项可对照 [Position of the Moon](https://www.braeunig.us/space/plntpos.htm)。仓库中没有 NASA 事件表、Besselian 元素、路径数据或预计算日期与位置，也没有第三方数学库。

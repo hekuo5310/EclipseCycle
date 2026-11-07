@@ -2,14 +2,27 @@
   "pack": {
     "pack_format": 48,
     "supported_formats": [
-      48,
+      18,
       94
     ],
-    "min_format": 48,
+    "min_format": 18,
     "max_format": [
       94,
       1
     ],
-    "description": "日月蚀轮 / Eclipse Cycle · Java 1.21.x"
+    "description": "日月蚀轮 / Eclipse Cycle"
+  },
+  "overlays": {
+    "entries": [
+      {
+        "directory": "legacy_1_20",
+        "formats": [
+          18,
+          41
+        ],
+        "min_format": 18,
+        "max_format": 41
+      }
+    ]
   }
 }
