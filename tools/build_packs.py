@@ -25,44 +25,57 @@ TYPES = [
 ]
 
 def write(path, content):
+    """Write a UTF-8 pack file with a trailing newline."""
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content + "\n", encoding="utf-8")
 
 def obj(path, content):
+    """Write pack metadata or another JSON resource."""
     write(path, json.dumps(content, ensure_ascii=False, indent=2))
 
 def fn(path, *lines):
+    """Write a function into the modern pack layout."""
     write(F / (path + ".mcfunction"), "\n".join(lines).strip())
 
 def set_(key, value):
+    """Build a command that assigns a system score."""
     return f"scoreboard players set #{key} {SYS} {value}"
 
 def op(to, operator, source):
+    """Build an operation between two system scores."""
     return f"scoreboard players operation #{to} {SYS} {operator} #{source} {SYS}"
 
 def add(key, value):
+    """Build an addition or subtraction for a system score."""
     action = "add" if value >= 0 else "remove"
     return f"scoreboard players {action} #{key} {SYS} {abs(value)}"
 
 def match(key, interval):
+    """Build an execute clause that matches a system score range."""
     return f"if score #{key} {SYS} matches {interval}"
 
 def cmp(a, operator, b):
+    """Build an execute clause that compares two system scores."""
     return f"if score #{a} {SYS} {operator} #{b} {SYS}"
 
 def call(path):
+    """Build a call to a function in the pack namespace."""
     return f"function {NS}:{path}"
 
 def when(condition, cmd):
+    """Run a command only when its execute clauses pass."""
     return f"execute {condition} run {cmd}"
 
 def stop(condition):
+    """End the current function when its execute clauses pass."""
     return when(condition, "return 0")
 
 def save(storage, field, key):
+    """Build a command that copies a system score into integer storage."""
     return f"execute store result storage {storage} {field} int 1 run scoreboard players get #{key} {SYS}"
 
 def read(storage, field, key):
+    """Build a command that loads an integer storage field into a system score."""
     return f"execute store result score #{key} {SYS} run data get storage {storage} {field}"
 
 CONSTANTS = dict(zero=0, neg=-1, four=4, sixteen=16, scale=1000, turn=3600, half=1800,
@@ -169,6 +182,7 @@ fn("astro/day",
    when(match("phase", 0), call("astro/center")))
 
 def angle(name, period, offset):
+    """Emit commands for a wrapped orbital angle in tenths of a degree."""
     return (op(name, "=", "t"), op(name, "%=", period), op(name, "*=", "turn"),
             op(name, "/=", period), add(name, offset), op(name, "%=", "turn"))
 
@@ -240,9 +254,11 @@ fn("astro/center",
        when(match("kind", code), set_("axis_z", row[7])))))
 
 def get_player(objective, key):
+    """Copy an objective from the executing player to a system score."""
     return f"scoreboard players operation #{key} {SYS} = @s ec.{objective}"
 
 def put_player(key, objective):
+    """Copy a system score to an objective on the executing player."""
     return f"scoreboard players operation @s ec.{objective} = #{key} {SYS}"
 
 fn("space/player_chunk",
@@ -279,6 +295,7 @@ fn("space/ellipse",
    when(cmp("dx", "<=", "million"), set_("inside", 1)))
 
 def range_probe(name, radius):
+    """Emit a nine-point rectangle probe against the current solar belt."""
     # A linear, axis-aligned map preserves the extrema of all nine probes.
     # Reduce the 3x3 samples to bounds, then evaluate the nearest rectangle point.
     lines = [set_("inside", 0), stop(match("kind", "0")), stop(match("kind", "5..")),
@@ -324,6 +341,7 @@ for dist in range(1, 6):
     offsets.extend([(dist, 0, 0), (-dist, 0, 0), (0, 0, dist), (0, 0, -dist)])
 
 def relative(offset):
+    """Encode an integer offset as a relative Minecraft coordinate."""
     return "~" + (str(offset) if offset else "")
 
 fn("space/obsidian",
@@ -360,7 +378,7 @@ fn("teleport/consume",
    stop(match("moved", "0")),
    'title @s actionbar [{"translate":"eclipse_cycle.target_result","fallback":"Prepared target overlap (1 = yes): "},{"score":{"name":"@s","objective":"ec.target"}}]')
 fn("teleport/move",
-   f"$execute in minecraft:overworld positioned $(x) $(y) $(z) store success score #moved {SYS} run tp @s ~0.5 ~ ~0.5")
+   f"$execute in minecraft:overworld positioned $(x) $(y) $(z) store success score #moved {SYS} run tp @s ~ ~ ~")
 
 fn("visual/hide", *(f"bossbar set {NS}:{row[0]} players" for row in TYPES))
 INACTIVE = f"unless predicate {NS}:active_window"
@@ -377,6 +395,7 @@ fn("visual/player",
      for code, row in enumerate(TYPES, 1)))
 
 def score_source(key):
+    """Build a predicate number provider for a fixed system score."""
     return {"type": "minecraft:score", "target": {"type": "minecraft:fixed", "name": "#" + key},
             "score": SYS}
 
@@ -388,6 +407,7 @@ obj(DATA / "data" / NS / "predicate/active_window.json", {
     ]})
 
 def texture(path, code):
+    """Draw a stage icon and encode it as a transparent RGBA PNG."""
     # Original raster art. Transparent background and seven eclipse silhouettes.
     size = 32
     colors = [(248, 199, 108), (255, 173, 57), (252, 216, 128), (245, 188, 103),
@@ -415,6 +435,7 @@ def texture(path, code):
         rows.append(bytes(row))
 
     def chunk(kind, content):
+        """Encode a PNG chunk with its length and checksum."""
         return struct.pack(">I", len(content)) + kind + content + struct.pack(">I", zlib.crc32(kind + content))
 
     path.parent.mkdir(parents=True, exist_ok=True)
